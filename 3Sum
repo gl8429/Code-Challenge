@@ -16,10 +16,14 @@ The solution set must not contain duplicate triplets.
 public class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
         List<List<Integer>> result = new ArrayList<>();
+        // corner case
         if (nums == null || nums.length < 3) return result;
         Arrays.sort(nums);
         for (int i = 0; i < nums.length; i++) {
+        	// if continus is the same number
             if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+            // convert into a two sum problem
             int target = 0 - nums[i];
             int j = i + 1;
             int k = nums.length - 1;
