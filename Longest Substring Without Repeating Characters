@@ -4,9 +4,14 @@ Given a string, find the length of the longest substring without repeating chara
 
 */
 
+// This problem I use two pointers & HashMap.
+
 public class Solution {
     public int lengthOfLongestSubstring(String s) {
+    	// Initialize a map of all characters
         int[] map = new int[256];
+
+        // Counter is to record the time of apperance, distance is to record the length of substring
         int begin = 0, end = 0, distance = 0, counter = 0;
         while (end < s.length()) {
             if (map[s.charAt(end++)]++ > 0) counter++;
