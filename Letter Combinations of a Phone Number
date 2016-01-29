@@ -1,0 +1,33 @@
+/*
+
+Given a digit string, return all possible letter combinations that the number could represent.
+
+A mapping of digit to letters (just like on the telephone buttons) is given below.
+
+Input:Digit string "23"
+Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+
+Note:
+Although the above answer is in lexicographical order, your answer could be in any order you want.
+
+*/
+
+public class Solution {
+    public List<String> letterCombinations(String digits) {
+        List<String> res = new ArrayList<String>();
+        if (digits == null || digits.length() == 0) return res;
+        String[] map = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        helper(map, digits, res, "", 0);
+        return res;
+    }
+    
+    public void helper(String[] map, String digits, List<String> res, String cur, int pos) {
+        if (pos == digits.length()) {
+            res.add(cur);
+            return;
+        }
+        for (int i = 0; i < map[digits.charAt(pos) - '0'].length(); i++) {
+            helper(map, digits, res, cur + map[digits.charAt(pos) - '0'].charAt(i), pos + 1);
+        }
+    }
+}
