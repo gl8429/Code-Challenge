@@ -12,6 +12,7 @@ Although the above answer is in lexicographical order, your answer could be in a
 
 */
 
+// obviously a dfs problem, backtracking
 public class Solution {
     public List<String> letterCombinations(String digits) {
         List<String> res = new ArrayList<String>();
