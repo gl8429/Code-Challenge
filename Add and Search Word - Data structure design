@@ -1,0 +1,78 @@
+/*
+
+Design a data structure that supports the following two operations:
+
+void addWord(word)
+bool search(word)
+search(word) can search a literal word or a regular expression string containing only letters a-z or .. A . means it can represent any one letter.
+
+For example:
+
+addWord("bad")
+addWord("dad")
+addWord("mad")
+search("pad") -> false
+search("bad") -> true
+search(".ad") -> true
+search("b..") -> true
+Note:
+You may assume that all words are consist of lowercase letters a-z.
+
+*/
+
+// Trie Tree
+
+public class WordDictionary {
+    
+    private TrieNode root;
+    
+    public WordDictionary() {
+        root = new TrieNode();
+    }
+    // Adds a word into the data structure.
+    public void addWord(String word) {
+        add(word, root, 0);
+    }
+    
+    private void add(String word, TrieNode root, int index) {
+        if (index == word.length()) {
+            root.isEnd = true;
+            return;
+        }
+        int pos = word.charAt(index) - 'a';
+        if (root.children[pos] == null) root.children[pos] = new TrieNode();
+        add(word, root.children[pos], index + 1);
+    }
+
+    // Returns if the word is in the data structure. A word could
+    // contain the dot character '.' to represent any one letter.
+    public boolean search(String word) {
+        return search(word, root, 0);
+    }
+    
+    private boolean search(String word, TrieNode root, int index) {
+        if (index == word.length()) return root.isEnd;
+        if (word.charAt(index) == '.') {
+            for (int i = 0; i < 26; i++) {
+                if (root.children[i] != null) if (search(word, root.children[i], index + 1)) return true;
+            }
+        } else {
+            if (root.children[word.charAt(index) - 'a'] != null) if (search(word, root.children[word.charAt(index) - 'a'], index + 1)) return true;
+        }
+        return false;
+    }
+}
+
+// Your WordDictionary object will be instantiated and called as such:
+// WordDictionary wordDictionary = new WordDictionary();
+// wordDictionary.addWord("word");
+// wordDictionary.search("pattern");
+
+class TrieNode {
+    boolean isEnd;
+    TrieNode[] children;
+    
+    public TrieNode() {
+        children = new TrieNode[26];
+    }
+}
