@@ -1,0 +1,35 @@
+/*
+
+Follow up for "Search in Rotated Sorted Array":
+What if duplicates are allowed?
+
+Would this affect the run-time complexity? How and why?
+
+Write a function to determine if a given target is in the array.
+
+*/
+
+// Binary search
+// Worst Case: O(n) -- because if we find duplicates, we just move low pointer one step
+// Average Time Complexity: O(log(n))
+
+public class Solution {
+    public boolean search(int[] nums, int target) {
+        if (nums == null || nums.length == 0) return false;
+        int low = 0, high = nums.length - 1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (nums[mid] == target) return true;
+            // left part is sorted
+            if (nums[low] < nums[mid]) {
+                if (target >= nums[low] && target < nums[mid]) high = mid - 1;
+                else low = mid + 1;
+                // right side is sorted
+            } else if (nums[low] > nums[mid]) {
+                if (target > nums[mid] && target <= nums[high]) low = mid + 1;
+                else high = mid - 1;
+            } else low++;
+        }
+        return false;
+    }
+}
