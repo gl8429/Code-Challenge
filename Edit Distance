@@ -11,7 +11,7 @@ c) Replace a character
 */
 
 // Dynamic Programming Equation:
-///		           |--dp[i - 1][j - 1]						if word1[i - 1][j - 1]
+//		           |--dp[i - 1][j - 1]						if word1[i - 1][j - 1]
 //		dp[i][j] = |
 //		           |--Min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]) + 1	otherwise
 //				 |-- replace	    |--delete	  |-- insert
