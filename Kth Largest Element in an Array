@@ -1,0 +1,78 @@
+/*
+
+Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
+
+For example,
+Given [3,2,1,5,6,4] and k = 2, return 5.
+
+Note: 
+You may assume k is always valid, 1 ≤ k ≤ array's length.
+
+*/
+
+// The thought of quick sort O(n)
+// O(N) best case / O(N^2) worst case running time + O(1) memory
+
+public class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        return quickSelect(nums, 0, nums.length - 1, k);
+    }
+    
+    public int quickSelect(int[] nums, int start, int end, int k) {
+        int pivot = end;
+        int left = start;
+        int right = end - 1;
+        while (left <= right) {
+            if (nums[left] > nums[pivot]) {
+                swap(nums, left, right--);
+            } else left++;
+        }
+        swap(nums, left, pivot);
+        int rank = nums.length - left;
+        if (rank == k) return nums[left];
+        if (rank > k) return quickSelect(nums, left + 1, end, k);
+        return quickSelect(nums, start, left - 1, k);
+    }
+    
+    public void swap(int[] nums, int a, int b) {
+        int tmp = nums[a];
+        nums[a] = nums[b];
+        nums[b] = tmp;
+    }
+}
+
+// O(N lg N) running time + O(1) memory
+
+public int findKthLargest(int[] nums, int k) {
+        final int N = nums.length;
+        Arrays.sort(nums);
+        return nums[N - k];
+}
+
+// O(N lg K) running time + O(K) memory
+
+public int findKthLargest(int[] nums, int k) {
+
+    final PriorityQueue<Integer> pq = new PriorityQueue<>();
+    for(int val : nums) {
+        pq.offer(val);
+
+        if(pq.size() > k) {
+            pq.poll();
+        }
+    }
+    return pq.peek();
+}
+
+// Shuffle first the apply the thought of quick sorting
+// O(N) guaranteed running time + O(1) space
+
+private void shuffle(int a[]) {
+
+        final Random random = new Random();
+        for(int ind = 1; ind < a.length; ind++) {
+            final int r = random.nextInt(ind + 1);
+            exch(a, ind, r);
+        }
+    }
+}
