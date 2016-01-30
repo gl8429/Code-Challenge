@@ -28,7 +28,7 @@ public class Solution {
     
     public void helper(List<List<Integer>> result, List<Integer> current, int n, int k, int pos) {
         if (current.size() == k) {
-	    // copy a new ArrayList
+	    // copy a new ArrayList, because current will be modified later
             result.add(new ArrayList<Integer>(current));
             return;
         }
