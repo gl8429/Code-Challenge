@@ -1,0 +1,64 @@
+/*
+
+Given a string s and a dictionary of words dict, add spaces in s to construct a sentence where each word is a valid dictionary word.
+
+Return all such possible sentences.
+
+For example, given
+s = "catsanddog",
+dict = ["cat", "cats", "and", "sand", "dog"].
+
+A solution is ["cats and dog", "cat sand dog"].
+
+*/
+
+public class Solution {
+    public List<String> wordBreak(String s, Set<String> wordDict) {
+        List<String> res = new ArrayList<String>();
+        if (s == null || wordDict == null || s.length() == 0) return res;
+        if (wordBreak1(s, wordDict)) {
+            StringBuilder sb = new StringBuilder();
+            helper(res, 0, sb, s, wordDict);
+        }
+        return res;
+    }
+
+    // backtracking
+    public void helper(List<String> res, int index, StringBuilder curr, String s, Set<String> wordDict) {
+        if (index == s.length()) {
+            res.add(new String(curr));
+            return;
+        }
+        for (int i = index; i < s.length(); i++) {
+            String tmp = s.substring(index, i + 1);
+            if (wordDict.contains(tmp)) {
+                int length = tmp.length();
+                if (curr.length() != 0) {
+                    curr.append(" ");
+                    length++;
+                }
+                curr.append(tmp);
+                helper(res, i + 1, curr, s, wordDict);
+                curr.delete(curr.length() - length, curr.length());
+            }
+        }
+    }
+    
+
+    // Time Complexity : O(n)
+    public boolean wordBreak1(String s, Set<String> wordDict) {
+        if (s == null && wordDict == null) return true;
+        if (s == null || wordDict == null) return false;
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        for (int i = 1; i < s.length()+1; i++) {
+            for (int j = 0; j < i; j++) {
+                if (dp[j] && wordDict.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+}
