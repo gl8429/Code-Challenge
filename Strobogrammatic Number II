@@ -13,6 +13,8 @@ Try to use recursion and notice that it should recurse with n - 2 instead of n -
 
 */
 
+// Bottom Up
+
 public class Solution {
     public List<String> findStrobogrammatic(int n) {
         return helper(n, n);
@@ -35,6 +37,7 @@ public class Solution {
     }
 }
 
+// Top Down
 // As add array may take some time, if we initialize the output array at first time, and revise it later, then it will save some time
 
 public class Solution {
