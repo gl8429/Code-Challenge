@@ -1,0 +1,52 @@
+/*
+
+Given a string, we can "shift" each of its letter to its successive letter, for example: "abc" -> "bcd". We can keep "shifting" which forms the sequence:
+
+"abc" -> "bcd" -> ... -> "xyz"
+Given a list of strings which contains only lowercase alphabets, group all strings that belong to the same shifting sequence.
+
+For example, given: ["abc", "bcd", "acef", "xyz", "az", "ba", "a", "z"], 
+Return:
+
+[
+  ["abc","bcd","xyz"],
+  ["az","ba"],
+  ["acef"],
+  ["a","z"]
+]
+Note: For the return value, each inner list's elements must follow the lexicographic order.
+
+*/
+
+
+public class Solution {
+    public List<List<String>> groupStrings(String[] strings) {
+        List<List<String>> res = new ArrayList<List<String>>();
+        if (strings == null || strings.length == 0) return res;
+        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        for (String string : strings) {
+            String s = normlizeString(string);
+            if (!map.containsKey(s)) map.put(s, new ArrayList<String>());
+            map.get(s).add(string);
+        }
+        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+            List<String> list = entry.getValue();
+            Collections.sort(list);
+            res.add(list);
+        }
+        return res;
+    }
+    
+    public String normlizeString(String s) {
+        char c = s.charAt(0);
+        int d = c - 'a';
+        StringBuilder sb = new StringBuilder();
+        sb.append('a');
+        for (int i = 1; i < s.length(); i++) {
+            int cur = s.charAt(i) - 'a';
+            if (cur < d) cur += 26;
+            sb.append(cur - d + 'a');
+        }
+        return sb.toString();
+    }
+}
