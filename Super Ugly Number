@@ -11,6 +11,14 @@ Note:
 
 */
 
+/** Time Complexity: O(nk) Space Complexity: O(n + k)
+   Three pointers
+   Ugly Number: 1--2--3--4--5--6--8--9--10--...
+	a: 2--4--6--8--10--12--16--18--20--...
+	b: 3--6--9--12--15--18--24--27--30--...
+	c: 5--10--15--20--25--30--40--45--50--...
+*/
+
 public class Solution {
     public int nthSuperUglyNumber(int n, int[] primes) {
         int[] ugly = new int[n];
