@@ -1,0 +1,33 @@
+/**
+
+Given a string which contains only lowercase letters, remove duplicate letters so that every letter appear once and only once. You must make sure your result is the smallest in lexicographical order among all possible results.
+
+Example:
+Given "bcabc"
+Return "abc"
+
+Given "cbacdcbc"
+Return "acdb"
+
+*/
+
+/**
+    Time Complexit: O(26 * n) = O(n)
+    The leftmost letter in the answer is the smallest s[i](Greedy choice). Additionally, we remove this letter from s[i + 1: end]
+*/
+
+
+public class Solution {
+    public String removeDuplicateLetters(String s) {
+        int[] table = new int[26];
+        for (int i = 0; i < s.length(); ++i) {
+            table[s.charAt(i) - 'a']++;
+        }
+        int pos = 0;
+        for (int i = 0; i < s.length(); ++i) {
+            if (s.charAt(i) < s.charAt(pos)) pos = i;
+            if (--table[s.charAt(i) - 'a'] == 0) break;
+        }
+        return s.length() == 0 ? "" : s.charAt(pos) + removeDuplicateLetters(s.substring(pos + 1).replace(s.charAt(pos) + "", ""));
+    }
+}
