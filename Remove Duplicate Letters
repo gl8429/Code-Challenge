@@ -31,3 +31,58 @@ public class Solution {
         return s.length() == 0 ? "" : s.charAt(pos) + removeDuplicateLetters(s.substring(pos + 1).replace(s.charAt(pos) + "", ""));
     }
 }
+
+/** Solution 2, more efficiency
+    for "cbacdcbc", we counts each letter's index:
+
+	a----2
+	b----1,6
+	c----0,3,5,7
+	d----4
+    we go from a to d, to find the first letter who has a index smaller than the largest index of the rest. Here, index 2 of letter a is smaller than 6, 7, 4, so we first pick a; then we remove all index smaller than 2, and we have:
+
+	b----6
+	c----3,5,7
+	d----4
+    the next round we pick c not b, why ? cuz 6 of b is larger than 4, but 3 of c is smaller than 4 and 6.
+
+	b---6
+	d---4
+    then we pick d and b to form "acdb"
+
+    O(n) time to count index, and as we only have 26 letters, it's about O(26 * 26) to find a candidate letter and O(n) time to remove all index. So I think the running time is O(n).
+*/
+
+
+public class Solution {
+    public String removeDuplicateLetters(String s) {
+            LinkedList[] repetitions = new LinkedList[26];
+            StringBuilder sb = new StringBuilder();
+            int charCount = 0;
+            int position = 0;
+            for (int i=0;i<s.length();i++){
+                if (repetitions[s.charAt(i)-'a'] == null && ++charCount>0)
+                    repetitions[s.charAt(i)-'a'] = new LinkedList<Integer>();
+                repetitions[s.charAt(i)-'a'].add(i);
+            }
+            while (charCount-->0){
+                int smallestLargest = Integer.MAX_VALUE;
+                for (LinkedList<Integer> list :repetitions)
+                    smallestLargest = (list!=null && list.peekLast()<smallestLargest)?list.peekLast():smallestLargest;
+                for (int i=0;i<repetitions.length;i++)
+                    if (repetitions[i]!=null && ((LinkedList<Integer>)repetitions[i]).peek()<=smallestLargest){
+                        position=((LinkedList<Integer>)repetitions[i]).peek();
+                        sb.append(s.charAt(position));
+                        repetitions[i] = null;
+                        break;
+                    }
+                if (charCount>0)
+                    for (LinkedList<Integer> list :repetitions)
+                        if (list!=null)
+                            while (list.peek()<position)
+                                list.poll();
+
+            }
+            return sb.toString();
+        }
+}
