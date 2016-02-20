@@ -1,0 +1,38 @@
+/**
+
+Given a string that contains only digits 0-9 and a target value, return all possibilities to add binary operators (not unary) +, -, or * between the digits so they evaluate to the target value.
+
+Examples: 
+"123", 6 -> ["1+2+3", "1*2*3"] 
+"232", 8 -> ["2*3+2", "2+3*2"]
+"105", 5 -> ["1*0+5","10-5"]
+"00", 0 -> ["0+0", "0-0", "0*0"]
+"3456237490", 9191 -> []
+
+*/
+
+public class Solution {
+    public List<String> addOperators(String num, int target) {
+        List<String> rst = new ArrayList<String>();
+        if (num == null || num.length() == 0) return rst;
+        helper(rst, "", num, target, 0, 0, 0);
+        return rst;
+    }
+    
+    public void helper(List<String> rst, String cur, String num, int target, int pos, long eval, long multiple) {
+        if (num.length() == pos) {
+            if (target == eval) rst.add(cur);
+            return;
+        }
+        for (int i = pos; i < num.length(); ++i) {
+            if (pos != i && num.charAt(pos) == '0') break;
+            long digit = Long.parseLong(num.substring(pos, i + 1));
+            if (pos == 0) helper(rst, cur + digit, num, target, i + 1, digit, digit);
+            else {
+                helper(rst, cur + "+" + digit, num, target, i + 1, eval + digit, digit);
+                helper(rst, cur + "-" + digit, num, target, i + 1, eval - digit, -digit);
+                helper(rst, cur + "*" + digit, num, target, i + 1, eval - multiple + digit * multiple, digit * multiple);
+            }
+        }
+    }
+}
