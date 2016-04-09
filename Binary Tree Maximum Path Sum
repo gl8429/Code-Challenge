@@ -37,7 +37,8 @@ public class Solution {
         if (root == null) return 0;
         int left = Math.max(0, dfs(root.left));
         int right = Math.max(0, dfs(root.right));
-        maxValue = Math.max(left + right + root.val, maxValue);
+        // The most tricky part, maxValue contains the bigger between the left-sub tree and right-sub tree. If (left + right + root.val < maxValue), then the result will not include the parent node, which means the maximum path is the left branch or right branch.
+	maxValue = Math.max(left + right + root.val, maxValue);
         return Math.max(left, right) + root.val;
     }
     
