@@ -11,7 +11,7 @@ More practice:
 If you have figured out the O(n) solution, try coding another solution using the divide and conquer approach, which is more subtle
 
 */
-
+// Dynamic programming
 public class Solution {
     
     public int maxSubArray(int[] nums) {
@@ -29,4 +29,27 @@ public class Solution {
     }
 }
 
-
+// Divide and Conquer
+public class Solution {
+    
+    public int maxSubArray(int[] nums) {
+        return maxSubArray(nums, 0, nums.length - 1);
+    }
+    
+    public int maxSubArray(int[] nums, int l, int r) {
+        if (l > r) return Integer.MIN_VALUE;
+        int m = l + (r - l) / 2;
+        int lm  = maxSubArray(nums, l, m - 1);
+        int rm = maxSubArray(nums, m + 1, r);
+        int i, sum, ml = 0, mr = 0;
+        for (i = m - 1, sum = 0; i >= l; i--) {
+            sum += nums[i];
+            ml = Math.max(ml, sum);
+        }
+        for (i = m + 1, sum = 0; i <= r; i++) {
+            sum += nums[i];
+            mr = Math.max(mr, sum);
+        }
+        return Math.max(Math.max(lm, rm), ml + mr + nums[m]);
+    }
+}
