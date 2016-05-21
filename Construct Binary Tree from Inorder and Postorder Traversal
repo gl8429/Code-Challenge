@@ -1,0 +1,41 @@
+/**
+
+Given inorder and postorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+*/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    
+    int inOrderIndex;
+    int postOrderIndex;
+    
+    public TreeNode buildTree(int[] inorder, int[] postorder, TreeNode end) {
+        if (postOrderIndex < 0) return null;
+        // Create Root Node
+        TreeNode n = new TreeNode(postorder[postOrderIndex--]);
+        // If right node exist, create right subtree
+        if (inorder[inOrderIndex] != n.val) n.right = buildTree(inorder, postorder, n);
+        inOrderIndex--;
+        // If left node exist, create left subtree
+        if ((end == null) || (inorder[inOrderIndex] != end.val)) n.left = buildTree(inorder, postorder, end);
+        return n;
+    }
+    
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        inOrderIndex = inorder.length - 1;
+        postOrderIndex = postorder.length - 1;
+        return buildTree(inorder, postorder, null);
+    }
+}
