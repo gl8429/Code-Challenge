@@ -1,0 +1,68 @@
+/**
+
+Given a binary tree, find the largest subtree which is a Binary Search Tree (BST), where largest means subtree with largest number of nodes in it.
+
+Note:
+A subtree must include all of its descendants.
+Here's an example:
+    10
+    / \
+   5  15
+  / \   \ 
+ 1   8   7
+The Largest BST Subtree in this case is the highlighted one. 
+The return value is the subtree's size, which is 3.
+Hint:
+
+You can recursively use algorithm similar to 98. Validate Binary Search Tree at each node of the tree, which will result in O(nlogn) time complexity.
+Follow up:
+Can you figure out ways to solve it with O(n) time complexity?
+
+*/
+
+// O(n)
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+ class Result {
+     int max;
+     int min;
+     int res;
+     boolean isBST;
+     public Result(int max, int min, int res, boolean isBST) {
+         this.max = max;
+         this.min = min;
+         this.res = res;
+         this.isBST = isBST;
+     }
+ }
+ 
+public class Solution {
+    public int largestBSTSubtree(TreeNode root) {
+        Result res = helper(root);
+        return res.res;
+    }
+    
+    public Result helper(TreeNode node) {
+        Result res = new Result(Integer.MIN_VALUE, Integer.MAX_VALUE, 0, true);
+        if (node == null) return res;
+        Result left = helper(node.left);
+        Result right = helper(node.right);
+        if (left.max < node.val && right.min > node.val && left.isBST && right.isBST) {
+            res.max = Math.max(right.max, node.val);
+            res.min = Math.min(left.min, node.val);
+            res.res = left.res + right.res + 1;
+        } else {
+            res.isBST = false;
+            res.res = Math.max(left.res, right.res);
+        }
+        return res;
+    }
+}
