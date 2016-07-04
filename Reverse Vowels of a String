@@ -1,0 +1,51 @@
+/**
+
+Write a function that takes a string as input and reverse only the vowels of a string.
+
+Example 1:
+Given s = "hello", return "holle".
+
+Example 2:
+Given s = "leetcode", return "leotcede".
+
+*/
+
+// Time: O(N), Space: O(N)
+public class Solution {
+    public String reverseVowels(String s) {
+        Stack<Character> stack = new Stack<Character>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (isVowel(c)) stack.push(c);
+        }
+        char[] array = s.toCharArray();
+        for (int i = 0; i < array.length; i++) {
+            if (isVowel(array[i])) array[i] = stack.pop();
+        }
+        return String.valueOf(array);
+    }
+
+    public boolean isVowel(char c) {
+        if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' || c == 'A' || c =='E' || c == 'I' || c == 'O' || c == 'U') return true;
+        return false;
+    }
+}
+
+// Time: O(N), Space: O(1), two pointers
+public class Solution {
+    public String reverseVowels(String s) {
+        String vowels = "aeiouAEIOU";
+        char[] array = s.toCharArray();
+        int start = 0, end = s.length() - 1;
+        while (start < end) {
+            while (start < end && !vowels.contains(array[start] + "")) start++;
+            while (start < end && !vowels.contains(array[end] + "")) end--;
+            char tmp = array[start];
+            array[start] = array[end];
+            array[end] = tmp;
+            start++;
+            end--;
+        }
+        return String.valueOf(array);
+    }
+}
