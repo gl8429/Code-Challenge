@@ -31,3 +31,29 @@ public class Solution {
         return j + 1;
     }
 }
+
+// Solution 2
+    public int removeDuplicates(int[] nums) {
+        // write your code here
+        if (nums == null || nums.length == 0) return 0;
+        int idx = 0;
+        int cur = nums[0];
+        int count = 0;
+        int point = 0;
+        while (idx < nums.length) {
+            if (nums[idx] == cur && count < 2) {
+                idx++;
+                count++;
+                nums[point++] = cur;
+            } else if (nums[idx] != cur) {
+                count = 1;
+                cur = nums[idx];
+                nums[point++] = cur;
+                idx++;
+            } else {
+                idx++;
+                count++;
+            }
+        }
+        return point;
+    }
