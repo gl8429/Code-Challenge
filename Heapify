@@ -1,0 +1,37 @@
+/**
+
+Given an integer array, heapify it into a min-heap array.
+
+For a heap array A, A[0] is the root of heap, and for each A[i], A[i * 2 + 1] is the left child of A[i] and A[i * 2 + 2] is the right child of A[i].
+
+*/
+
+// Time : O(n)
+
+public class Solution {
+    /**
+     * @param A: Given an integer array
+     * @return: void
+     */
+    public void heapify(int[] A) {
+        // write your code here
+        for (int i = A.length / 2; i >= 0; i--) heapify(A, i);
+    }
+
+    private void heapify(int[] A, int idx) {
+        while (idx < A.length) {
+            int small = idx;
+            if (idx * 2 + 1 < A.length && A[idx * 2 + 1] < A[small]) small = idx * 2 + 1;
+            if (idx * 2 + 2 < A.length && A[idx * 2 + 2] < A[small]) small = idx * 2 + 2;
+            if (idx == small) break;
+            swap(A, idx, small);
+            idx = small;
+        }
+    }
+
+    private void swap(int[] A, int a, int b) {
+        int tmp = A[a];
+        A[a] = A[b];
+        A[b] = tmp;
+    }
+}
