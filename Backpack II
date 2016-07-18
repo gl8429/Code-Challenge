@@ -8,6 +8,8 @@ You cannot divide item into small pieces and the total size of items you choose 
 
 */
 
+// 即res[i][v]表示前 i 件物品恰放入一个容量为 j 的背包可以获得的最大价值。
+
 public class Solution {
     /**
      * @param m: An integer m denotes the size of a backpack
