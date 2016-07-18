@@ -1,0 +1,42 @@
+/**
+
+Given a permutation which contains no repeated number, find its index in all the permutations of these numbers, which are ordered in lexicographical order. The index begins at 1.
+
+Given [1,2,4], return 1.
+
+*/
+
+/**
+
+以2,4,1为例，2为第2大数，4为剩余序列第2大数，1为剩余序列第1大数
+故表达式为：(2-1)*2! + (2-1)*1! + (1-1)*0! + 1 = 4
+
+*/
+
+
+public class Solution {
+    /**
+     * @param A an integer array
+     * @return a long integer
+     */
+    public long permutationIndex(int[] A) {
+        // Write your code here
+        long res = 0;
+        int n = A.length;
+        long fac = 1;
+        for (int i = 1; i < n; i++) fac *= i;
+        int initial = n - 1;
+        for (int i = 0; i < n; i++) {
+            long count = 0;
+            for (int j = i; j < n; j++) {
+                if (A[i] >= A[j]) count++;
+            }
+            res += (count - 1) * fac;
+            if (initial != 0) {
+                fac /= initial;
+                initial--;
+            }
+        }
+        return res + 1;
+    }
+}
