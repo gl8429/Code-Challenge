@@ -29,3 +29,22 @@ public class Solution {
 		return max;
 	}
 }
+
+// DP V[i-1] is its previous consecutive parentheses, i-2-V[i-1] is the position right outside this big "( ... )" part. So check if previous big "(...)" is a valid one
+
+    public int longestValidParentheses(String s) {
+        char[] array = s.toCharArray();
+        int[] dp = new int[s.length()];
+        int open = 0;
+        int max = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (array[i] == '(') open++;
+            if (array[i] == ')' && open > 0) {
+                dp[i] = 2 + dp[i - 1];
+                if (i >= dp[i]) dp[i] += dp[i - dp[i]];
+                open--;
+            }
+            if (dp[i] > max) max = dp[i];
+        }
+        return max;
+    }
