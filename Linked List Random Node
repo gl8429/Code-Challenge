@@ -43,7 +43,7 @@ public class Solution {
         ListNode result = null;
         ListNode current = head;
         for (int n = 1; current != null; n++) {
-            if (random.nextInt(n) != 0) result = current;
+            if (random.nextInt(n) == 0) result = current;
             current = current.next;
         }
         return result.val;
