@@ -1,0 +1,71 @@
+/**
+
+Given a non-empty array of integers, return the k most frequent elements.
+
+For example,
+Given [1,1,1,2,2,3] and k = 2, return [1,2].
+
+Note:
+You may assume k is always valid, 1 ≤ k ≤ number of unique elements.
+Your algorithm's time complexity must be better than O(n log n), where n is the array's size.
+
+*/
+
+// O(nlogn)
+
+public class Solution {
+    public static List<Integer> topKFrequent(int[] nums, int k) {
+        if (k >= nums.length) return IntStream.of(nums).boxed().collect(Collectors.toList());
+        Arrays.sort(nums);
+        List<Integer> res = new ArrayList<Integer>();
+        int idx = 1;
+        PriorityQueue<int[]> queue = new PriorityQueue<int[]>(k, new Comparator<int[]>(){
+            public int compare(int[] a, int[] b) {
+                return b[1] - a[1];
+            }
+        });
+        int count = 1;
+        while (idx < nums.length) {
+            while (idx < nums.length && nums[idx] == nums[idx - 1]) {
+                idx++;
+                count++;
+            }
+            queue.offer(new int[]{nums[idx - 1], count});
+            if (idx < nums.length && nums[idx] != nums[idx - 1]) idx++;
+            count = 1;
+        }
+        if (count == 1) queue.offer(new int[]{nums[idx - 1], count});
+        while (k-- > 0) {
+            res.add(queue.poll()[0]);
+        }
+        return res;
+    }
+}
+
+//O(n)
+
+public class Solution {
+    public List<Integer> topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for (int num : nums) {
+            if (map.containsKey(num)) {
+                map.put(num, map.get(num) + 1);
+            } else {
+                map.put(num, 1);
+            }
+        }
+        List<Integer>[] bucket = new List[nums.length + 1];
+        for (int key : map.keySet()) {
+            int frequency = map.get(key);
+            if (bucket[frequency] == null) {
+                bucket[frequency] = new ArrayList<>();
+            }
+            bucket[frequency].add(key);
+        }
+        List<Integer> res = new ArrayList<Integer>();
+        for (int pos = bucket.length - 1; pos >= 0 && res.size() < k; pos--) {
+            if (bucket[pos] != null) res.addAll(bucket[pos]);
+        }
+        return res;
+    }
+}
