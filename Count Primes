@@ -1,0 +1,25 @@
+/**
+
+Count the number of prime numbers less than a non-negative number, n.
+
+*/
+
+public class Solution {
+    public int countPrimes(int n) {
+        if (n == 0 || n == 1) return 0;
+        boolean[] array = new boolean[n];
+        array[1] = true;
+        int count = 0;
+        for (int i = 1; i < n; i++) {
+            if (!array[i]) {
+                count++;
+                int prime = i;
+                int times = n / prime;
+                for (int time = 2; time * prime < n; time++) {
+                    array[time * prime] = true;
+                }
+            }
+        }
+        return count;
+    }
+}
