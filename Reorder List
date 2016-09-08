@@ -1,0 +1,56 @@
+/**
+
+Given a singly linked list L: L0→L1→…→Ln-1→Ln,
+reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…
+
+You must do this in-place without altering the nodes' values.
+
+For example,
+Given {1,2,3,4}, reorder it to {1,4,2,3}.
+
+*/
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public void reorderList(ListNode head) {
+        ListNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        if (fast != null) {
+            ListNode tmp = slow.next;
+            slow.next = null;
+            slow = tmp;
+        }
+        ListNode newHead = reverse(slow);
+        ListNode cur = head;
+        while (newHead != null) {
+            if (newHead == cur.next) cur.next = null;
+            ListNode a = cur.next;
+            cur.next = newHead;
+            ListNode b = newHead.next;
+            newHead.next = a;
+            cur = a;
+            newHead = b;
+        }
+    }
+    
+    public ListNode reverse(ListNode head) {
+        ListNode pre = null;
+        while (head != null) {
+            ListNode tmp = head.next;
+            head.next = pre;
+            pre = head;
+            head = tmp;
+        }
+        return pre;
+    }
+}
