@@ -1,0 +1,39 @@
+/**
+
+You have a number of envelopes with widths and heights given as a pair of integers (w, h). One envelope can fit into another if and only if both the width and height of one envelope is greater than the width and height of the other envelope.
+
+What is the maximum number of envelopes can you Russian doll? (put one inside other)
+
+Example:
+Given envelopes = [[5,4],[6,4],[6,7],[2,3]], the maximum number of envelopes you can Russian doll is 3 ([2,3] => [5,4] => [6,7]).
+
+*/
+
+public class Solution {
+    public int maxEnvelopes(int[][] envelopes) {
+        if (envelopes == null) return 0;
+        if (envelopes.length < 2) return envelopes.length;
+        Arrays.sort(envelopes, new Comparator<int[]>(){
+            public int compare(int[] arr1, int[] arr2){
+                if(arr1[0] == arr2[0])
+                    return arr2[1] - arr1[1];
+                else
+                    return arr1[0] - arr2[0];
+           } 
+        });
+        int size = 0;
+        int[] dp = new int[envelopes.length];
+        for (int[] envelope : envelopes) {
+            int left = 0, right = size, middle = 0;
+            while (left < right) {
+                middle = (right + left) / 2;
+                if (dp[middle] < envelope[1]) left = middle + 1;
+                else right = middle;
+            }
+            dp[left] = envelope[1];
+            // When larger than the right most element, then move up one pointer
+            if (left == size) size++;
+        }
+        return size;
+    }
+}
