@@ -36,9 +36,6 @@ public class Solution {
 public class Solution {
     public boolean isBalanced(TreeNode root) {
         if(root == null) return true;
-        if(root.left == null && root.right == null){
-            return true;
-        }
         if(Math.abs(treeHeight(root.left) - treeHeight(root.right)) > 1){
             return false;
         }
