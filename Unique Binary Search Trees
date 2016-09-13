@@ -13,6 +13,22 @@ Given n = 3, there are a total of 5 unique BST's.
 
 */
 
+/**
+
+G(n): the number of unique BST for a sequence of length n.
+
+F(i, n), 1 <= i <= n: the number of unique BST, where the number i is the root of BST, and the sequence ranges from 1 to n.
+
+naturally, the subsequence 1…(i-1) on its left side would lay on the left branch of the root, and similarly the right subsequence 
+(i+1)…n lay on the right branch of the root.
+
+G(n) = F(1, n) + F(2, n) + ... + F(n, n).
+
+F(i, n) = G(i-1) * G(n-i)   1 <= i <= n
+
+G(n) = G(0) * G(n-1) + G(1) * G(n-2) + … + G(n-1) * G(0) 
+*/
+
 public class Solution {
     public int numTrees(int n) {
         int[] dp = new int[n + 1];
