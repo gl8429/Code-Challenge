@@ -27,15 +27,11 @@ public class Solution {
         if (n == 0) return new ArrayList<TreeNode>();
         return generate(1, n);
     }
-    
+
     public List<TreeNode> generate(int start, int end) {
         List<TreeNode> res = new ArrayList<TreeNode>();
         if (start > end) {
             res.add(null);
-            return res;
-        }
-        if (start == end) {
-            res.add(new TreeNode(start));
             return res;
         }
         List<TreeNode> left, right;
