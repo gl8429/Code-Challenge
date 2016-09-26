@@ -63,7 +63,6 @@ public class Solution {
             rx = Math.max(rx, rec[2]);
             ry = Math.max(ry, rec[3]);
             sum += (rec[2] - rec[0]) * (rec[3] - rec[1]);
-	    // Here it to pruning
             //bottom-left
             if (overlap(rec[0] + " " + rec[1], 1)) return false;
             //top-left
