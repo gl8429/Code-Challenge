@@ -63,3 +63,36 @@ public class Solution {
     }
     
 }
+
+// DP solution
+
+/**
+* f[i][j]: if s[0..i-1] matches p[0..j-1]
+* if p[j - 1] != '*'
+*      f[i][j] = f[i - 1][j - 1] && s[i - 1] == p[j - 1]
+* if p[j - 1] == '*'
+*      f[i][j] is true iff any of the following is true
+*      1) "*" repeats 0 time and matches empty: f[i][j - 1]
+*      2) "*" repeats >= 1 times and matches "*?": f[i - 1][j] bcoz s[i - 1] matches ? in "*?"
+* '?' matches any single character
+*/
+
+    public boolean isMatch(String s, String p) {
+        int m = s.length();
+        int n = p.length();
+        boolean[][] dp = new boolean[m + 1][n + 1];
+        dp[0][0] = true;
+        for (int i = 1; i <= m; i++) dp[i][0] = false;
+        // p[0..j - 1] matches empty iff they are all "*"
+	for (int j = 1; j <= n; j++) dp[0][j] = '*' == p.charAt(j - 1) && dp[0][j - 1];
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (p.charAt(j - 1) != '*') {
+                    dp[i][j] = dp[i - 1][j - 1] && (s.charAt(i - 1) == p.charAt(j - 1) || p.charAt(j - 1) == '?');
+                } else {
+                    dp[i][j] = dp[i][j - 1] || dp[i - 1][j];
+                }
+            }
+        }
+        return dp[m][n];
+    }
