@@ -19,3 +19,95 @@ public class Solution {
         return -1;
     }
 }
+
+// KMP Solution, Time: O(n), Extra space: O(n)
+
+a         : no prefix and no suffix since there is only one letter
+ab        : prefixes[a]
+            suffixes[b]
+abc       : prefixes[a,ab]
+            suffixes[c,bc]
+abca      : prefixes[a,ab,abc]
+            suffixes[a,ca,bca]
+abcab     : prefixes[a,ab,abc,abca]
+            suffixes[b,ab,cab,bcab]
+abcabd    : prefixes[a,ab,abc,abca,abcab]
+            suffixes[d,bd,abd,cabd,bcabd]
+abcabda   : prefixes[a,ab,abc,abca,abcab,abcabd]
+            suffixes[a,da,bda,abda,cabda,bcabda]
+abcabdab  : prefixes[a,ab,abc,abca,abcab,abcabd,abcabda]
+            suffixes[b,ab,dab,bdab,abdab,cabdab,bcabdab]
+abcabdabc : prefixes[a,ab,abc,abca,abcab,abcabd,abcabda,abcabdab]
+            suffixes[c,bc,abc,dabc,bdabc,abdabc,cabdabc,bcabdabc,abcabdabc]
+
+a         : no prefix and no suffix since there is only one letter
+ab        : 0
+abc       : 0
+abca      : 1 [a]
+abcab     : 2 [ab]
+abcabd    : 0
+abcabda   : 1 [a]
+abcabdab  : 2 [ab]
+abcabdabc : 3 [abc]
+Final array is:
+p    :  a   b   c   a   b   d   a   b   c
+p[i] :  0   1   2   3   4   5   6   7   8
+b[i] : -1   0   0   0   1   2   0   1   2   3
+
+Pre Processing Code:
+
+public int[] preProcessPattern(char[] ptrn) {
+    int i = 0, j = -1;
+    int ptrnLen = ptrn.length;
+    int[] b = new int[ptrnLen + 1];
+ 
+    b[i] = j;
+    while (i < ptrnLen) {            
+            while (j >= 0 && ptrn[i] != ptrn[j]) {
+            // if there is mismatch consider the next widest border
+            // The borders to be examined are obtained in decreasing order from 
+            //  the values b[i], b[b[i]] etc.
+            j = b[j];
+        }
+        i++;
+        j++;
+        b[i] = j;
+    }
+    return b;
+}
+
+The preprocessing algorithm inner while loop:
+If p(j) == p(i), A border of width j can be extended by p(i), here it doesnt go into inner while loop.
+If p(j) != p(i), the next-widest border is examined by setting j = b[j]. The loop terminates at the latest if no border can be extended (j = -1).
+
+   public void searchSubString(char[] text, char[] ptrn) {
+        int i = 0, j = 0;
+        // pattern and text lengths
+        int ptrnLen = ptrn.length;
+        int txtLen = text.length;
+ 
+        // initialize new array and preprocess the pattern
+        int[] b = preProcessPattern(ptrn);
+ 
+        while (i < txtLen) {
+            while (j >= 0 && text[i] != ptrn[j]) {
+                j = b[j];
+            }
+            i++;
+            j++;
+ 
+            // a match is found
+            if (j == ptrnLen) {
+                System.out.println("found substring at index:" + (i - ptrnLen));
+                j = b[j];
+            }
+        }
+    }
+
+Index         0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16  17  18  19  20  21  22  23
+Text(T)       a b c a b d a b c a b  d  a  b  c  a  b   d   a   b   d   a   b   c
+Pattern(P)    a b c a b d a b c
+PMT (b[i])   -1 0 0 0 1 2 0 1 2 3
+
+
+https://tekmarathon.com/2013/05/14/algorithm-to-find-substring-in-a-string-kmp-algorithm/
