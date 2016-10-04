@@ -16,6 +16,9 @@ A faster approach is to use extra space.
 
 */
 
+// 这个题目 首先可以发现 h-index 是不会大于总文章数的
+
+// Bucket sort 思路
 public class Solution {
     public int hIndex(int[] citations) {
         int len = citations.length;
@@ -35,6 +38,19 @@ public class Solution {
                 return i;
         }
     
+        return 0;
+    }
+}
+
+// Sort first
+public class Solution {
+    public int hIndex(int[] citations) {
+        Arrays.sort(citations);
+        int len = citations.length;
+        for (int i = 0; i < citations.length; i++) {
+            if (len <= citations[i]) return len;
+            else len--;
+        }
         return 0;
     }
 }
