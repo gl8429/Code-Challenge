@@ -11,6 +11,10 @@ public class Solution {
         if (x == 0) return 0;
         if (n == 0) return 1;
         int sign = n > 0 ? 1 : -1;
+        if (n == Integer.MIN_VALUE) {
+            n = Integer.MAX_VALUE;
+            x *= x;
+        }
         n = Math.abs(n);
         double result = myPow(x, n / 2);
         result *= result;
