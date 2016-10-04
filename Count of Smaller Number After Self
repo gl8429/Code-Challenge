@@ -14,7 +14,17 @@ Return the array [2, 1, 1, 0].
 
 */
 
-// Time Complexity: Worst: O(n^2)
+// Time Complexity: Worst: O(n^2) like n ,n - 1, ..., 2, 1
+// Average O(nlogn)
+
+    (1, 1)
+        \
+        (6, 3)
+        /
+    (2, 1)
+        \
+        (5 , 1)
+
 
 class TreeNode {
     int val;
@@ -40,7 +50,7 @@ public class Solution {
         Collections.reverse(res);
         return res;
     }
-    
+
     private int insertNode(TreeNode root, int val) {
         int thisCount = 0;
         while (true) {
@@ -61,3 +71,184 @@ public class Solution {
         return thisCount;
     }
 }
+
+// Fenwick Tree
+// 因为一般Fenwick Tree都是从零index开始的，所以我们想先把所有的num update一下。
+public List<Integer> countSmaller(int[] nums) {
+    List<Integer> res = new ArrayList<Integer>();
+    if (nums == null || nums.length == 0) return res;
+    int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+    for (int num : nums) min = Math.min(min, num);
+    for (int i = 0; i < nums.length; i++) {
+        nums[i] = nums[i] - min + 1;
+        max = Math.max(max, nums[i]);
+    }
+    int[] fenwickTree = new int[max + 1];
+    for (int i = nums.length - 1; i >= 0; i--) {
+		// index of nums[i] is nums[i] - 1
+		// we need to find the sum (-INF, nums[i] - 1), so the index is nums[i]
+		// - 2
+        res.add(0, getSum(fenwickTree, nums[i] - 2));
+        // after searching, we need to update the fenwick tree for the next round
+		// the new added number is nums[i], but its index of original is nums[i]
+		// - 1
+		updateFenwickTree(fenwickTree, nums[i] - 1, 1);
+    }
+    return res;
+}
+
+// The index is the index of original array
+private void updateFenwickTree(int[] fenwickTree, int index, int value) {
+	// the index of fenwick tree is on larger than the index of original array
+    for (int i = index + 1; i < fenwickTree.length; i += i & (-i)) {
+        fenwickTree[i] += value;
+    }
+}
+
+// The index is the index of original array
+private int getSum(int[] fenwickTree, int index) {
+    int sum = 0;
+	// the index of fenwick tree is one larger than the index of original array
+    for (int i = index + 1; i > 0; i -= i & (-i)) {
+        sum += fenwickTree[i];
+    }
+    return sum;
+}
+
+
+// Another solution of binary index tree
+public class Solution {
+    public List<Integer> countSmaller(int[] nums) {
+        if(nums == null || nums.length == 0) return new ArrayList<>();
+        
+        // clone the original array and sort it, store <value, position> into hash map
+        Map<Integer, Integer> map = new HashMap<>();
+        int[] sortedNum = nums.clone();
+        Arrays.sort(sortedNum);
+        for(int i = 0; i < nums.length; i++) map.put(sortedNum[i], i);
+        
+        // create fenwick tree whose length is one larger than the original array
+        int[] fenwickTree = new int[nums.length + 1];
+        List<Integer> res = new ArrayList<>();
+        for(int i = nums.length - 1; i >= 0; i--) {
+            res.add(0, getSum(fenwickTree, map.get(nums[i]) - 1));
+            updateFenwickTree(fenwickTree, map.get(nums[i]), 1);
+        }
+        return res;
+    }
+
+    // the index is the index of original array
+    private void updateFenwickTree(int[] fenwickTree, int index, int value) {
+        // the index of fenwick tree is one larger than the index of original array
+        for(int i = index + 1; i < fenwickTree.length; i += i & (-i)) {
+            fenwickTree[i] += value;
+        }
+    }
+
+    // the index is the index of original array
+    private int getSum(int[] fenwickTree, int index) {
+        int sum = 0;
+        // the index of fenwick tree is one larger than the index of original array
+        for(int i = index + 1; i > 0; i -= i & (-i)) {
+            sum += fenwickTree[i];
+        }
+        return sum;
+    }
+}
+
+// Segment tree solution
+
+public class Solution {
+    static class segmentTreeNode {
+        int start, end, count;
+        segmentTreeNode left, right;
+        segmentTreeNode(int start, int end, int count) {
+            this.start = start;
+            this.end = end;
+            this.count = count;
+            left = null;
+            right = null;
+        }
+    }
+    public static List<Integer> countSmaller(int[] nums) {
+        // write your code here
+        List<Integer> result = new ArrayList<Integer>();
+        
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        for (int i : nums) {
+            min = Math.min(min, i);
+            
+        }
+        if (min < 0) {
+            for (int i = 0; i < nums.length; i++) {
+                nums[i] -= min;//deal with negative numbers, seems a dummy way
+            }
+        }
+        for (int i : nums) {
+            max = Math.max(max, i);
+        }
+        segmentTreeNode root = build(0, max);
+        for (int i = 0; i < nums.length; i++) {
+            updateAdd(root, nums[i]);
+        }
+        for (int i = 0; i < nums.length; i++) {
+            updateDel(root, nums[i]);
+            result.add(query(root, 0, nums[i] - 1));
+        }
+        return result;
+    }
+    public static segmentTreeNode build(int start, int end) {
+        if (start > end) return null;
+        if (start == end) return new segmentTreeNode(start, end, 0);
+        int mid = (start + end) / 2;
+        segmentTreeNode root = new segmentTreeNode(start, end, 0);
+        root.left = build(start, mid);
+        root.right = build(mid + 1, end);
+        root.count = root.left.count + root.right.count;
+        return root;
+    }
+
+    public static int query(segmentTreeNode root, int start, int end) {
+        if (root == null) return 0;
+        if (root.start == start && root.end == end) return root.count;
+        int mid = (root.start + root.end) / 2;
+        if (end < mid) {
+            return query(root.left, start, end);
+        } else if (start > end) {
+            return query(root.right, start, end);
+        } else {
+            return query(root.left, start, mid) + query(root.right, mid + 1, end);
+        }
+    }
+
+    public static void updateAdd(segmentTreeNode root, int val) {
+        if (root == null || root.start > val || root.end < val) return;
+        if (root.start == val && root.end == val) {
+            root.count ++;
+            return;
+        }
+        int mid = (root.start + root.end) / 2;
+        if (val <= mid) {
+            updateAdd(root.left, val);
+        } else {
+            updateAdd(root.right, val);
+        }
+        root.count = root.left.count + root.right.count;
+    }
+
+    public static void updateDel(segmentTreeNode root, int val) {
+        if (root == null || root.start > val || root.end < val) return;
+        if (root.start == val && root.end == val) {
+            root.count --;
+            return;
+        }
+        int mid = (root.start + root.end) / 2;
+        if (val <= mid) {
+            updateDel(root.left, val);
+        } else {
+            updateDel(root.right, val);
+        }
+        root.count = root.left.count + root.right.count;
+    }
+}
+
