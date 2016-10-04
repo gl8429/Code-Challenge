@@ -21,10 +21,34 @@ public class Solution {
         if (root.val <= p.val) return inorderSuccessor(root.right, p);
         else {
             TreeNode left = inorderSuccessor(root.left, p);
+	    // 如果能够找到 就返回left,没有就返回root
             return (left != null) ? left : root;
         }
     }
 }
+
+// Successor Iteration
+/**
+
+The inorder traversal in BST is in ascending order. To find a successor, we just need to find
+the smallest one that is larger than the given node, since there is no duplicate in BST. Succ
+is a pointer that keeps the possible successor. Whenever you go left, the current root is the
+new possible successor, otherwise it remains the same.
+
+*/
+
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        TreeNode succ = null;
+        while (root != null) {
+            if (root.val > p.val) {
+                succ = root;
+                root = root.left;
+            } else {
+                root = root.right;
+            }
+        }
+        return succ;
+    }
 
 // Predecessor
 
@@ -40,4 +64,16 @@ public TreeNode predecessor(TreeNode root, TreeNode p) {
   }
 }
 
+// Iteration to find predecessor
 
+public TreeNode inorderPredecessor (TreeNode root, TreeNode p) {
+    TreeNode pre = null;
+    while(root!=null) {
+        if(root.val < p.val) {
+        	pre = root;
+        	root = root.right;
+        }
+        else root = root.left;
+    }
+    return pre;
+}

@@ -45,3 +45,66 @@ public class Solution {
         if (root.right != null) helper(root.right);
     }
 }
+
+// Morris Traversal
+// Threaded Binary tree
+
+/**
+
+In this traversal, we first create links to Inorder successor and print the
+data using these links, and finally revert the changes to restore original tree.
+
+*/
+
+int KSmallestUsingMorris(TreeNode root, int k) {
+	int count = 0;
+	int k_mall = Integer.MIN_VALUE;
+	TreeNode cur = root;
+	while (cur != null) {
+		// If current node doesn't have left child, we increment the count
+		// , as the number will be in an increasing order.
+		if (cur.left == null) {
+			count++;
+			if (count == k) k_small = cur.val;
+			// Go to next node
+			cur = cur.right;
+		} else {
+			// create links to inorder successor and count using links
+			TreeNode pre = cur.left;
+			while (pre.right != null && pre.right != cur) {
+				pre = pre.right;
+			}
+			// Build links
+			if (pre.right == null) {
+				// link made to inorder successor
+				pre.right = cur;
+				cur = cur.left;
+			// While breaking the links in so made temporary threaded
+			// tree, we will check for the kth smallest condition
+			} else {
+				// break links
+				pre.right = null;
+				count++;
+				if (count == k) k_small = cur.val;
+				cur = cur.right;
+			}
+		}
+	}
+	return k_small;
+}
+
+// Therefore, we can use Morris Traversal to inorder traversal binary tree without
+using recursion and stack
+
+/**
+
+1. Initialize current as root 
+2. While current is not NULL
+   If current does not have left child
+      a) Print current’s data
+      b) Go to the right, i.e., current = current->right
+   Else
+      a) Make current as right child of the rightmost node in current's left subtree
+      b) Go to this left child, i.e., current = current->left
+
+*/

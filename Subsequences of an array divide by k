@@ -1,0 +1,47 @@
+/**
+
+k=3，［1，2，3，4，1］，return 4, the return array could be [3，12，123，234]
+
+*/
+
+/**
+
+Prefix sum solution, which will return count
+
+*/
+
+public int count(int[] array, int k) {
+	int[] count = new int[k];
+	count[0] = 1;
+	int pre_sum = 0;
+	for (int i : array) {
+		pre_sum += i;
+		pre_sum %= k;
+		count[pre_sum] += 1;
+	}
+	int res = 0;
+	for (int i = 0; i < k; i++) {
+		res += count[i] * (count[i] - 1) / 2;
+	}
+	return res;
+}
+
+// If we want to return the subsequence, we can use a hashmap to record the index of all same result.
+
+/*
+
+for example, [1,2,3,4,1] and k = 3
+prefix sum : [1,3,6,10,11]
+divide by 3: [0,1,0,0,1,2]
+{
+	0: [0, 2, 3]
+	1: [1, 4]
+	2: [5]
+}
+then result array could be 
+[0, 2) : 1,2
+[0, 3) : 1,2,3
+[2, 3) : 3
+[1, 4) : 2,3,4
+
+*/

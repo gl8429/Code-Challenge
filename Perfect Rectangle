@@ -76,7 +76,8 @@ public class Solution {
         Iterator<Integer> iter = map.values().iterator();
         while (iter.hasNext()) {
             Integer i = iter.next();
-            if (i != 15 && i != 12 && i != 10 && i != 9 && i != 6 && i != 5 && i != 3) count++;
+	    if (i == 1 || i == 2 || i == 4 || i == 8) count++;
+          //  if (i != 15 && i != 12 && i != 10 && i != 9 && i != 6 && i != 5 && i != 3) count++;
         }
         return count == 4 && sum == (rx - lx) * (ry - ly);
     }
