@@ -29,12 +29,11 @@ public class Solution {
         return sum(root.left, true) + sum(root.right, false);
     }
     
-    private int sum(TreeNode root, boolean flag) {
+   private int dfs(TreeNode root, boolean isLeft) {
         if (root == null) return 0;
-        if (root.left == null && root.right == null && flag) return root.val;
-        if (root.left != null && root.right != null) return sum(root.left, true) + sum(root.right, false);
-        if (root.left == null) return sum(root.right, false);
-        if (root.right == null) return sum(root.left, true);
-        return 0;
+        if (isLeft) {
+            if (root.left == null && root.right == null) return root.val;
+        }
+        return dfs(root.left, true) + dfs(root.right, false);
     }
 }
