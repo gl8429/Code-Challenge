@@ -46,3 +46,24 @@ public class Solution {
         return head;
     }
 }
+
+// 二刷
+public class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode cur = head, pre = null;
+        int c = k;
+        while (c-- > 0 && cur != null) {
+            cur = cur.next;
+        }
+        if (c >= 0) return head;
+        pre = reverseKGroup(cur, k);
+        c = k;
+        while (c-- > 0) {
+            ListNode tmp = head.next;
+            head.next = pre;
+            pre = head;
+            head = tmp;
+        }
+        return pre;
+    }
+}
