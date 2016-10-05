@@ -33,4 +33,37 @@ public class Solution {
 }
 
 // O(n) time, O(1) space
-
+public class Solution {
+    public boolean isPalindrome(ListNode head) {
+        if (head == null || head.next == null) return true;
+        ListNode fast = head, slow = head;
+        ListNode pre = new ListNode(0);
+        pre.next = head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            pre = pre.next;
+        }
+        if (fast != null) slow = slow.next;
+        pre.next = null;
+        ListNode newHead = reverse(slow);
+        while (head != null && newHead != null) {
+            if (head.val != newHead.val) return false;
+            head = head.next;
+            newHead = newHead.next;
+        }
+        if (head == null && newHead == null) return true;
+        return false;
+    }
+    private ListNode reverse(ListNode head) {
+        ListNode newHead = null;
+        ListNode cur = head;
+        while (cur != null) {
+            ListNode tmp = cur.next;
+            cur.next = newHead;
+            newHead = cur;
+            cur = tmp;
+        }
+        return newHead;
+    }
+}
