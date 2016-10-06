@@ -1,0 +1,42 @@
+/**
+
+Given two string sequences write an algo­rithm to find, find the length of longest sub­string present in both of them.
+
+String A = "tutorialhorizon";
+String B = "dynamictutorialProgramming";
+
+Output: Length of Longest Common Substring: 8 ("tutorial").
+
+*/
+
+/**
+
+Base Cases: If any of the string is null then LCS will be 0.
+
+Check if ith character in one string A is equal to jth character in string B
+Case 1: both characters are same
+LCS[i][j] = 1 + LCS[i-1][j-1] (add 1 to the result and remove the last character from both the strings and check the result for the smaller string.)
+
+Case 2: both characters are not same.
+LCS[i][j] = 0
+At the end, traverse the matrix and find the maximum element in it, This will the length of Longest Common Substring.
+
+*/
+
+public int find(char[] A, char[] B) {
+	int m = A.lengtj, n = B.length;
+	int[][] dp = new int[m + 1][n + 1];
+	int max = Integer.MIN_VALUE;
+	for (int i = 0; i < m; i++) dp[i][0] = 0;
+	for (int j = 0; j < n; j++) dp[0][j] = 0;
+	for (int i = 1; i < m; i++) {
+		for (int j = 1; j < n; j++) {
+			if (A[i- 1] == B[j - 1]) {
+				dp[i][j] = dp[i - 1][j - 1] + 1;
+				max = Math.max(max, dp[i][j]);
+			}
+			else dp[i][j] = 0;
+		}
+	}
+	return max;
+}
