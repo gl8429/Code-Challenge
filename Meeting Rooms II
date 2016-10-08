@@ -76,3 +76,29 @@ public class Solution {
         return room;
     }
 }
+
+// Sweeping Line
+
+    public int minMeetingRooms(Interval[] intervals) {
+        PriorityQueue<Room> pq = new PriorityQueue<Room>(10, new Comparator<Room>(){
+            @Override
+            public int compare(Room r1, Room r2) {
+                if (r1.val != r2.val) return r1.val - r2.val;
+                if (r1.isStart == false) return -1;
+                else return 1;
+            }
+        });
+        for (Interval interval : intervals) {
+            pq.offer(new Room(interval.start, true));
+            pq.offer(new Room(interval.end, false));
+        }
+        int max = 0;
+        int count = 0;
+        while (!pq.isEmpty()) {
+            Room room = pq.poll();
+            if (room.isStart) count++;
+            else count--;
+            max = Math.max(max, count);
+        }
+        return max;
+    }
