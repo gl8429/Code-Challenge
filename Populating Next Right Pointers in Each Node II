@@ -36,6 +36,7 @@ After calling your function, the tree should look like:
 
 public class Solution {
     public void connect(TreeLinkNode root) {
+	if (root == null) return;
         TreeLinkNode tmp = new TreeLinkNode(0);
         while (root != null) {
             TreeLinkNode current = tmp;
