@@ -1,0 +1,47 @@
+/**
+
+比如：
+          1
+	/   \
+       2      3
+     /	    /   \
+    4      5     6
+变成:
+1
+｜
+2 ——3
+｜
+4——5——6
+
+*/
+
+ class TreeLinkNode {
+     int val;
+     TreeLinkNode left, right, next;
+     TreeLinkNode(int x) { val = x; }
+ }
+public class SalbringTree {
+    public void connect(TreeLinkNode root) {
+        TreeLinkNode tmp = new TreeLinkNode(0);
+        while (root != null) {
+            TreeLinkNode current = tmp;
+            while (root != null) {
+                if (root.left != null) {
+                    current.next = root.left;
+                    current = current.next;
+                    if (root != tmp.next) root.left = null;
+                }
+                if (root.right != null) {
+                    current.next = root.right;
+                    current = current.next;
+                    root.right = null;
+                }
+                root = root.next;
+            }
+            root = tmp.next;
+            tmp.next = null;
+        }
+
+    }
+
+}
