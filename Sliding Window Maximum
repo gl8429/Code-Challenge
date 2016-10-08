@@ -37,7 +37,9 @@ public class Solution {
         Deque<Integer> q = new ArrayDeque<Integer>();
         int index = 0;
         for (int i = 0; i < n; ++i) {
-            if (!q.isEmpty() && q.peek() < i - k + 1) q.poll();
+	    // Check outdate element at the beginning
+            while (!q.isEmpty() && q.peek() < i - k + 1) q.poll();
+	    // remove the element, which can not be the maximum
             while (!q.isEmpty() && nums[q.peekLast()] < nums[i]) q.pollLast();
             q.offer(i);
             if (i >= k - 1) r[index++] = nums[q.peek()];
