@@ -1,11 +1,21 @@
 /**
 
-Given a Binary Tree (Bt), convert it to a Doubly Linked List(DLL). 
+Given a Binary Tree (Bt), convert it to a Doubly Linked List(DLL).
 The left and right pointers in nodes are to be used as previous and next pointers respectively in converted DLL.
 The order of nodes in DLL must be same as Inorder of the given Binary Tree.
 The first node of Inorder traversal (left most node in BT) must be head node of the DLL.
 
+          10
+	/    \
+      12      15
+     /  \    /
+    25  30  36
+
+head = 25 = 12 = 30 = 10 = 36 = 15
+
 */
+
+// Solution One
 
 /**
 
@@ -21,26 +31,102 @@ The first node of Inorder traversal (left most node in BT) must be head node of 
 
 */
 
-TreeNode tree2List(TreeNode root) {
-	if (root == null) return root;
-	root = tree2ListUtil(root);
-	while (root.left != null) root = root.left;
-	return root;
+// Time Complexity: O(nlogn), because, for each node, it need to go to find the rightmost node
+// of its left node and the leftmost node of its right node, which will cost log(n), then the
+// total is O(nlogn)
+
+class BinaryTree {
+    Node root;
+    /* This is the core function to convert Tree to list. This function
+       follows steps 1 and 2 of the above algorithm */
+  
+    Node bintree2listUtil(Node node) {
+        if (node == null) return node;
+  
+        // Convert the left subtree and link to root
+        if (node.left != null) {
+            // Convert the left subtree
+            Node left = bintree2listUtil(node.left);
+  
+            // Find inorder predecessor. After this loop, left
+            // will point to the inorder predecessor
+            for (; left.right != null; left = left.right);
+  
+            // Make root as next of the predecessor
+            left.right = node;
+  
+            // Make predecssor as previous of root
+            node.left = left;
+        }
+  
+        // Convert the right subtree and link to root
+        if (node.right != null) {
+            // Convert the right subtree
+            Node right = bintree2listUtil(node.right);
+  
+            // Find inorder successor. After this loop, right
+            // will point to the inorder successor
+            for (; right.left != null; right = right.left);
+  
+            // Make root as previous of successor
+            right.left = node;
+  
+            // Make successor as next of root
+            node.right = right;
+        }
+  
+        return node;
+    }
+      
+    Node bintree2list(Node node) {
+        if (node == null) return node;
+  
+        // Convert to DLL using bintree2listUtil()
+        node = bintree2listUtil(node);
+  
+        // bintree2listUtil() returns root node of the converted
+        // DLL.  We need pointer to the leftmost node which is
+        // head of the constructed DLL, so move to the leftmost node
+        while (node.left != null) node = node.left;
+        return node;
+    }
 }
 
-TreeNode tree2ListUtil(TreeNode root) {
-	if (root == null) return root;
-	if (root.left != null) {
-		TreeNode left = tree2ListUtil(root.left);
-		for (; left.right != null; left = left.right);
-		left.right = root;
-		root.left = left;
+// O(n) time complexity
+
+/**
+
+1) Fix Left Pointers: In this step, we change left pointers to point to previous nodes in DLL.
+The idea is simple, we do inorder traversal of tree. 
+In inorder traversal, we keep track of previous visited node and change left pointer to the previous node.
+
+2) Fix Right Pointers: The above is intuitive and simple. How to change right pointers to point to next node in DLL?
+The idea is to use left pointers fixed in step 1. 
+We start from the rightmost node in Binary Tree (BT). 
+The rightmost node is the last node in DLL.
+Since left pointers are changed to point to previous node in DLL,
+we can linearly traverse the complete DLL using these pointers.
+The traversal would be from last to first node.
+While traversing the DLL, we keep track of the previously visited node and change the right pointer to the previous node.
+
+*/
+private static TreeNode pre = null;
+
+public void fixPrevPtr(TreeNode root) {
+	if (root != null) {
+		fixPrevPtr(root.left);
+		root.left = pre;
+		pre = root;
+		fixPrevPtr(root.right);
 	}
-	if (root.right != null) {
-		TreeNode right = tree2ListUtil(root.right);
-		for (; right.left != null; right = right.left);
-		right.left = root;
-		root.right = right;
+}
+
+public TreeNode fixPrevPtr(TreeNode root) {
+	while (root != null && root.right != null) root = root.right;
+	while (root != null && root.left != null) {
+		pre = root;
+		root = root.left;
+		root.right = pre;
 	}
 	return root;
 }
