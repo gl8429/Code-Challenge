@@ -1,0 +1,46 @@
+/**
+
+
+public class MergeKSortedIterator {
+    public static List<Integer> mergeK (List<Iterator<Integer>> iterators) {
+        List<Integer> res = new ArrayList<Integer>();
+        if (iterators == null || iterators.size() == 0) return res;
+        PriorityQueue<MyIterator> pq = new PriorityQueue<MyIterator>(iterators.size());
+        for (Iterator<Integer> iterator : iterators) {
+            if (iterator.hasNext()) pq.add(new MyIterator(iterator.next(), iterator));
+        }
+        while (pq.size() != 0) {
+            MyIterator cur = pq.poll();
+            res.add(cur.val);
+            if (cur.hasNext()) pq.offer(cur);
+        }
+
+        return res;
+    }
+}
+
+class MyIterator implements Comparable<MyIterator> {
+
+    public int val;
+    public Iterator<Integer> iterator;
+
+    public MyIterator(int val, Iterator<Integer> iterator) {
+        this.val = val;
+        this.iterator = iterator;
+    }
+
+    public boolean hasNext() {
+        if (iterator.hasNext()) {
+            this.val = iterator.next();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int compareTo(MyIterator that) {
+        return this.val - that.val;
+    }
+}
+
+*/
