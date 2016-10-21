@@ -17,6 +17,39 @@ The deepest right leaf node is the node with value 10.
 
 */
 
+// O(n)
+
+class Result {
+    int height;
+    TreeNode candidate;
+    public Result(int height, TreeNode candidate) {
+        this.height = height;
+        this.candidate = candidate;
+    }
+}
+
+        public Result findCommonAncestorOnePass(TreeNode root) {
+            if (root == null) return new Result(0, null);
+            Result left = findCommonAncestorOnePass(root.left);
+            Result right = findCommonAncestorOnePass(root.right);
+            if (left.candidate == null && right.candidate == null)
+                return new Result(1, root);
+            if (left.candidate != null && right.candidate != null) {
+                if (left.height == right.height) return new Result(left.height + 1, root);
+                else if (left.height > right.height) return new Result(left.height + 1, left.candidate);
+                else return new Result(right.height + 1, right.candidate);
+            }
+            if (left.candidate == null) {
+                return new Result(right.height + 1, right.candidate);
+            } else {
+                return new Result(left.height + 1, left.candidate);
+            }
+        }
+
+// O(2n)
+
+
+
 public class Solution {
 	int maxLevel = 0;
 	TreeNode left, right;
