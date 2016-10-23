@@ -56,4 +56,39 @@ public class Solution {
         lives -= board[row][col] & 1;
         return lives;
     }
-} 
+}
+
+// Naive solution
+
+    public void gameOfLife(int[][] board) {
+        int m = board.length, n = board[0].length;
+        int[][] newboard = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                update(newboard, board, i, j);
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                board[i][j] = newboard[i][j];
+            }
+        }
+    }
+    
+    public void update(int[][] newboard, int[][] board, int x, int y) {
+        int[][] dirs = new int[][]{{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}};
+        int live = 0;
+        int death = 0;
+        for (int[] dir : dirs) {
+            int a = dir[0] + x;
+            int b = dir[1] + y;
+            if (a >= board.length || a < 0 || b >= board[0].length || b < 0) continue;
+            if (board[a][b] == 0) death++;
+            else live++;
+        }
+        if (board[x][y] == 1 && live < 2) newboard[x][y] = 0;
+        if (board[x][y] == 1 && (live == 2 || live == 3)) newboard[x][y] = 1;
+        if (board[x][y] == 1 && (live > 3)) newboard[x][y] = 0;
+        if (board[x][y] == 0 && live == 3) newboard[x][y] = 1;
+    }
+ 
