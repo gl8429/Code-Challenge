@@ -13,6 +13,8 @@ Given preorder and inorder traversal of a tree, construct the binary tree.
  *     TreeNode(int x) { val = x; }
  * }
  */
+
+// O(n) solution
 public class Solution {
     
     int preorderIdx;
@@ -34,3 +36,24 @@ public class Solution {
     }
 }
 
+// O(nlogn) solution
+public class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        return build(preorder, inorder, 0, inorder.length - 1, 0);
+    }
+    
+    public TreeNode build(int[] preorder, int[] inorder, int inS, int inE, int preIdx) {
+        if (inS > inE || preIdx > preorder.length - 1) return null;
+        TreeNode root = new TreeNode(preorder[preIdx]);
+        int inRoot = 0;
+        for (int i = inS; i <= inE; i++) {
+            if (inorder[i] == root.val) {
+                inRoot = i;
+                break;
+            }
+        }
+        root.left = build(preorder, inorder, inS, inRoot - 1, preIdx + 1);
+        root.right = build(preorder, inorder, inRoot + 1, inE, preIdx + inRoot - inS + 1);
+        return root;
+    }
+}
