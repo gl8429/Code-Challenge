@@ -121,7 +121,7 @@ public void fixPrevPtr(TreeNode root) {
 	}
 }
 
-public TreeNode fixPrevPtr(TreeNode root) {
+public TreeNode fixNextPtr(TreeNode root) {
 	while (root != null && root.right != null) root = root.right;
 	while (root != null && root.left != null) {
 		pre = root;
@@ -129,4 +129,9 @@ public TreeNode fixPrevPtr(TreeNode root) {
 		root.right = pre;
 	}
 	return root;
+}
+
+public TreeNode BTToDLL(TreeNode root) {
+	fixPrevPtr(root);
+	return fixNextPtr(root);
 }
