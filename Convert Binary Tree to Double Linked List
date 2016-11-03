@@ -135,3 +135,73 @@ public TreeNode BTToDLL(TreeNode root) {
 	fixPrevPtr(root);
 	return fixNextPtr(root);
 }
+
+
+
+
+// Convert binary tree to double linked list: preorder, inorder, postorder
+
+public class ConvertBTDDL {
+
+    static TreeNode pre  = null;
+
+    public static void fixPrevInorder(TreeNode root) {
+        if (root != null) {
+            fixPrevInorder(root.left);
+            root.left = pre;
+            pre = root;
+            fixPrevInorder(root.right);
+        }
+    }
+
+    public static void fixPrevPreorder(TreeNode root) {
+        if (root != null) {
+            fixPrevPreorder(root.right);
+            fixPrevPreorder(root.left);
+            root.right = pre;
+            pre = root;
+        }
+    }
+
+    public static void fixPrevPostorder(TreeNode root) {
+        if (root != null) {
+            TreeNode right = root.right;
+            TreeNode left = root.left;
+            root.right = pre;
+            pre = root;
+            fixPrevPostorder(right);
+            fixPrevPostorder(left);
+        }
+    }
+
+    public static TreeNode fixNextPostorder(TreeNode root) {
+        while (root != null && root.left != null) root = root.left;
+        while (root != null && root.right != null) {
+            pre = root;
+            root = root.right;
+            root.left = pre;
+        }
+        while (root != null && root.left != null) root = root.left;
+        return root;
+    }
+
+    public static TreeNode fixNextPreorder(TreeNode root) {
+        while (root != null && root.right != null) {
+            pre = root;
+            root = root.right;
+            root.left = pre;
+        }
+        while (root != null && root.left != null) root = root.left;
+        return root;
+    }
+
+    public static TreeNode fixNextInorder(TreeNode root) {
+        while (root != null && root.right != null) root = root.right;
+        while (root != null && root.right != null) {
+            pre = root;
+            root = root.left;
+            root.right = pre;
+        }
+        return root;
+    }
+}
