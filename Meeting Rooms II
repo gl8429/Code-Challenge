@@ -78,6 +78,14 @@ public class Solution {
 }
 
 // Sweeping Line
+    class Room {
+	int val;
+	boolean isStart;
+	public Room(int val, boolean isStart) {
+		this.val = val;
+		this.isStart = isStart;
+	}
+    }
 
     public int minMeetingRooms(Interval[] intervals) {
         PriorityQueue<Room> pq = new PriorityQueue<Room>(10, new Comparator<Room>(){
