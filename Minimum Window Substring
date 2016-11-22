@@ -41,3 +41,41 @@ public class Solution {
         return distance == Integer.MAX_VALUE ? "" : s.substring(head, head + distance);
     }
 }
+
+// Translate
+
+public class Solution {
+    public String minWindow(String s, String t) {
+        int begin = 0, end = 0;
+        // count denotes how many characters has not been matched
+        int count = t.length();
+        int distance = Integer.MAX_VALUE;
+        int[] target = new int[256];
+        int head = 0;
+
+        // initialize hashmap
+        for (int i = 0; i < t.length(); ++i) target[t.charAt(i)]++;
+        while (end < s.length()) {
+	    char endChar = s.charAt(end);
+	    if (target[endChar] > 0) {
+		count--;
+	    }
+	    target[endChar]--;
+	    end++;
+            while (count == 0) {
+                if (end - begin < distance) {
+                    distance = end - begin;
+                    head = begin;
+                }
+		char beginChar = s.charAt(begin);
+		if (target[beginChar] == 0) {
+			count++;
+		}
+		target[beginChar]++;
+		begin++;
+            }
+        }
+	if (distance == Integer.MAX_VALUE) return "";
+	else return s.substring(head, head + distance);
+    }
+}
