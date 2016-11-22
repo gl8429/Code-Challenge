@@ -1,0 +1,108 @@
+/**
+
+Find the nearest k points of oringinal point, two solutions
+
+*/
+
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
+/**
+ * Created by Lucifer on 12/10/2016.
+ * 维护一个大小为k的heap，时间复杂度O(nlogk),空间复杂度O(k)
+ * 建个大小为n的堆，然后取k次，时间复杂度O(n + k log n), 空间复杂度O(n)
+ * quick select方法，时间复杂度O(n + n) = O(n), 空间复杂度O(1)
+ * k 很大时 quick select办法比较好，k很小时候维护大小为k的堆比较好
+ */
+public class NPoints {
+
+    public static double partition(Point[] points, int i, int j, int k) {
+        int start = i;
+        int pivot = j;
+        int end = j - 1;
+        while (start <= end) {
+            if (points[start].compareTo(points[pivot]) == 1) {
+                Point tmp = points[end];
+                points[end--] = points[start];
+                points[start] = tmp;
+            } else {
+                start++;
+            }
+        }
+        Point tmp = points[start];
+        points[start] = points[pivot];
+        points[pivot] = tmp;
+        int rank = start + 1;
+        int[] a = new int[0];
+        if (rank == k) return getDistance(points[start]);
+        else if (rank < k) return partition(points, start + 1, j, k);
+        else return partition(points, i, start - 1, k);
+    }
+
+    public static double getDistance(Point p) {
+        return Math.sqrt(p.x * p.x + p.y * p.y);
+    }
+
+    public static void retrieveKNear(Point[] points, int k) {
+        double distance = partition(points, 0, points.length - 1, k);
+        for (Point point : points) {
+            if (getDistance(point) <= distance) System.out.println(point);
+        }
+    }
+
+    public static void main(String[] args) {
+        Point p0 = new Point(1, 1);
+        Point p1 = new Point(1, 3);
+        Point p2 = new Point(2, 2);
+        Point p3 = new Point(2, 5);
+        Point[] points = new Point[]{p0, p1, p2, p3};
+        retrieveKNear(points, 1);
+    }
+
+
+    // Heap solution
+    public Point[] Solution(Point[] array, Point origin, int k) {
+        Point[] rvalue = new Point[k];
+        int index = 0;
+        PriorityQueue<Point> pq = new PriorityQueue<Point>(k, new Comparator<Point>() {
+            @Override
+            public int compare(Point a, Point b) {
+                return (int) (getDistance(b, new Point(0, 0)) - getDistance(a, new Point(0, 0)));
+            }
+        });
+
+        for (int i = 0; i < array.length; i++) {
+            pq.offer(array[i]);
+            if (pq.size() > k)
+                pq.poll();
+        }
+
+        while (!pq.isEmpty())
+            rvalue[index++] = pq.poll();
+        return rvalue;
+    }
+
+    private double getDistance(Point a, Point b) {
+        return Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+    }
+}
+
+class Point implements Comparable<Point> {
+    int x;
+    int y;
+
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    @Override
+    public int compareTo(Point o) {
+        if ((this.x * this.x + this.y * this.y - o.x * o.x - o.y * o.y) > 0) return 1;
+        else return -1;
+    }
+
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
+}
