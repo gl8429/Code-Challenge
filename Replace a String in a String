@@ -1,0 +1,25 @@
+/**
+
+Replace all occurrence of the given pattern to ‘X’.
+For example, given that the pattern=”abc”, replace “abcdeffdfegabcabc”
+with “XdeffdfegX”. Note that multiple occurrences of abc’s that are
+contiguous will be replaced with only one ‘X’.
+
+*/
+
+    public static void replaceString(String ary, String abc, String X, StringBuilder sb) {
+        if (ary.length() == 0) return;
+        int idx = ary.indexOf(abc);
+        if (idx == -1) {
+            sb.append(ary);
+            return;
+        }
+        for (int i = 0; i < idx; i++) {
+            sb.append(ary.charAt(i));
+        }
+        sb.append(X);
+        replaceString(ary.substring(idx + abc.length()), abc, X, sb);
+    }
+
+
+http://articles.leetcode.com/microsoft-string-replacement-problem/
