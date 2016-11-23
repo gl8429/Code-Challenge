@@ -16,4 +16,57 @@ head = 1 = 2 = tail
 
 */
 
+/**
+The idea is to use Doubly Linked List (DLL). We can delete middle element in O(1)
+time by maintaining mid pointer. We can move mid pointer in both directions using
+previous and next pointers.
+
 http://www.geeksforgeeks.org/design-a-stack-with-find-middle-operation/
+
+*/
+
+class DLLNode {
+	int data;
+	DLLNode prev;
+	DLLNode next;
+	public DLLNode (int data) {
+		this.data = data;
+	}
+}
+
+public class MyStack {
+	DLLNode head;
+	DLLNode mid;
+	int count;
+	
+	public MyStack() {
+		count = 0;
+	}
+
+	public void push(int new_data) {
+		DLLNode newDLLNode = new DLLNode(new_data)
+		count++;
+		if (count == 1) mid = newDLLNode;
+		else {
+			head.prev = newDLLNode;
+			if (count & 1 == 1) mid = mid.prev;
+		}
+		head = newDLLNode;
+	}
+
+	public int pop() {
+		if (count == 0)  return -1;
+		DLLNode curHead = head;
+		int item = curHead.data;
+		head = head.next;
+		if (head != null) head.prev = null;
+		count --;
+		if ((count & 1) == 0) mid = mid.next;
+		return item;
+	}
+
+	public int findMiddle() {
+		if (count == 0) return -1;
+		return mid.data;
+	}
+}
