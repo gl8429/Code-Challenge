@@ -1,0 +1,53 @@
+/**
+
+Given a tree string expression in balanced parenthesis format:
+[A[B[C][D]][E][F]]
+Construct a tree and return the root of the tree.
+                A
+            /   |  \
+           B    E   F
+          / \
+         C   D
+
+*/
+
+    public static TreeNodes build (String s) {
+	TreeNodes root = new TreeNodes(0);
+	dfs (s, root);
+	return root.children.get(0);
+    }
+
+    static int idx = 0;
+
+    public static void dfs(String s, TreeNodes parent) {
+        if (s.length() == idx) return;
+        while (idx < s.length()) {
+            if (s.charAt(idx) == '[') {
+                idx++;
+                TreeNodes node = new TreeNodes(s.charAt(idx));
+                parent.children.add(node);
+                idx++;
+                if (idx < s.length() && s.charAt(idx) == '[') {
+                    dfs(s, node);
+                } else if (idx < s.length() && s.charAt(idx) == ']') {
+                    idx++;
+                    dfs(s, parent);
+                    return;
+                }
+
+            } else if (s.charAt(idx) == ']') {
+                idx++;
+                return;
+            }
+        }
+    }
+
+class TreeNodes {
+    char val;
+    List<TreeNodes> children;
+
+    public TreeNodes(char val) {
+        this.children = new ArrayList<>();
+        this.val =val;
+    }
+}
