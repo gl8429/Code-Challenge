@@ -1,0 +1,37 @@
+/**
+
+Tournament tree 的定义是parent 是孩子node的最小值， 如下例 return 5
+
+                2
+              /  \
+             2    7
+           /  \   | \
+          5    2  8  7
+
+*/
+
+/**
+
+The root is the minimum, then right is larger than root, it can be
+seemed as a candidate, and we don't need to consider the value under
+the right child, because all values will be larger than the right child
+For the left subtree, as the left child of left child of minimum, the it
+can also be a candidate. Then we can get the result by comparing these
+two candidates
+
+*/
+
+int p, q;
+
+public static int findSecondMinValue(TreeNode root) {
+	if (root.left != null && root.right != null) return Integer.MAX_VALUE;
+	if (root.left.val == root.val) {
+		p = findSecondMinValue(root.left);
+		q = root.right.val;
+	else {
+		p = findSecondMinValue(root.right);
+		q = root.left.val;
+	}
+	return Math.min(p, q);
+}
+}
